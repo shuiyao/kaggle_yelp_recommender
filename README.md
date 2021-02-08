@@ -1,4 +1,4 @@
-# Recommender System for Restaurants in Pittsburgh, PA
+# Recommender System for Yelp
 
 ## Data
 [Yelp Dataset on Kaggle](https://www.kaggle.com/yelp-dataset/yelp-dataset)
