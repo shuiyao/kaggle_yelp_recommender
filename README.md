@@ -1,4 +1,9 @@
-# Recommender System for Yelp
+# Recommender Systems for Yelp
+
+Making recommendations for restaurants using the Yelp dataset.
+Include: 
+- A content based recommender based on feature vectors constructed from the restaurant descriptions and reviews.
+- Collaborative filtering recommender systems based on matrix factorization using the Alternating Least Square (ALS) algorithm.
 
 ## Data
 [Yelp Dataset on Kaggle](https://www.kaggle.com/yelp-dataset/yelp-dataset)
