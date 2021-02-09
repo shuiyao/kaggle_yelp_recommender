@@ -64,6 +64,7 @@ class RecommenderDeepNN:
     deepnn = RecommenderDeepNN(deepfm__seed=2048)
     deepnn.load_data(config.JSON_BUSINESS, config.CSV_RATINGS)
     deepnn.fit()
+    deepnn.topN(260, n=5)
 
     deepnn = RecommenderDeepNN(scaler='standard', train_size=0.99)    
     deepnn.fit(config.JSON_BUSINESS, config.CSV_RATINGS)
@@ -302,9 +303,10 @@ class RecommenderDeepNN:
             print("Pred: %4.2f  Avg: %3.1f out of %d reviews\n" % \
                   (predictions[i], business['stars'], business['review_count']))
 
-deepnn = RecommenderDeepNN(deepfm__seed=2048)
-deepnn.load_data(config.JSON_BUSINESS, config.CSV_RATINGS)
-deepnn.fit()
-deepnn.topN(260, 5)
+# Test
+#deepnn = RecommenderDeepNN(deepfm__seed=2048)
+#deepnn.load_data(config.JSON_BUSINESS, config.CSV_RATINGS)
+#deepnn.fit()
+#deepnn.topN(260, 5)
 
 print("DONE")
