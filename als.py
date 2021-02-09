@@ -3,10 +3,10 @@ import numpy as np
 import ast
 import os, warnings, argparse
 
-import config
+import config, utils
 
 # Default parameters
-params = {'min_reviews':5}
+params = {'category':'restaurants', 'min_reviews':5}
 params_surprise = {'method':'als', 'n_epochs':10, 'reg_u':15, 'reg_i':10}
 params_sparkALS = {'rank':20, 'maxIter':10, 'regParam':0.1, 'alpha':1.0}
 
@@ -22,7 +22,7 @@ from pyspark.ml.evaluation import RegressionEvaluator
 
 class ALSRecommender:
     '''
-    Content based recommender. Construct feature vector for each restaurant based on selected features from its attributes and catogories. Generate user profiles based on previously reviewed restaurants.
+    Recommender using collaborative filtering.
     '''
     def __init__(self, path_business=config.JSON_BUSINESS, path_ratings=config.CSV_RATINGS, alslib='surprise'):
         '''
@@ -38,6 +38,7 @@ class ALSRecommender:
         self.business = None # Placeholder for businesses
         self.ratings = None # Placeholder for the rating matrix
         self.min_reviews = params['min_reviews']
+        self.category = params['category']        
 
         self.rating_matrix = None
 
@@ -53,6 +54,11 @@ class ALSRecommender:
         '''
         self.nrows = nrows
         df = pd.read_json(self.path_business, lines=True, encoding='utf-8')
+
+        to_keep = config.Keywords_Categories[self.category]
+        keeprows = utils.filter_business_with_categories(df, to_keep)
+        df = df[keeprows]
+        
         self.n_items = df.shape[0]
         df = df[df['review_count'] > self.min_reviews]
         print("Select {0} out {1} businesses have more than {2:d} reviews."\

@@ -3,7 +3,7 @@ import numpy as np
 import ast
 import os, argparse
 
-import config
+import config, utils
 
 from sklearn.feature_extraction import DictVectorizer
 
@@ -14,7 +14,7 @@ from scipy import sparse
 #  - Account for 'stars' more efficiently
 
 # Default parameters
-params = {'min_idf':10, 'min_reviews':5}
+params = {'category':'restaurants', 'min_idf':10, 'min_reviews':5}
 
 class ContentBasedRecommender:
     '''
@@ -33,14 +33,21 @@ class ContentBasedRecommender:
         self.business = None # Placeholder for businesses
         self.ratings = None # Placeholder for the rating matrix
         self.min_idf = params['min_idf']
-        self.min_reviews = params['min_reviews']        
+        self.min_reviews = params['min_reviews']
+        self.category = params['category']
         
     def _load_data(self, build_feature_matrix=True, nrows=None):
         '''
         Only keep businesses that have enough reviews.
         '''
         df = pd.read_json(self.path_business, lines=True, encoding='utf-8')
+
+        to_keep = config.Keywords_Categories[self.category]
+        keeprows = utils.filter_business_with_categories(df, to_keep)
+        df = df[keeprows]
+
         self.n_items = df.shape[0]
+
         df = df[df['review_count'] > self.min_reviews]
         print("Select {0} out {1} businesses have more than {2:d} reviews."\
               .format(df.shape[0], self.n_items, self.min_reviews))
@@ -114,7 +121,6 @@ class ContentBasedRecommender:
 
         # Use DictVectorizer to encode attributes as the dict type
         vec = DictVectorizer()
-
         for var in config.Attributes_Dict:
             df[var] = df['attributes'].map(lambda l: ast.literal_eval(l[var]) if (l is not None and var in l) else dict())
             df[var] = df[var].apply(lambda l: dict() if l is None else l)

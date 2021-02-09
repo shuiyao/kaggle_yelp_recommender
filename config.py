@@ -1,5 +1,3 @@
-# Global variables for content.py and als.py
-
 FOLDER_INPUT = "./data/"
 
 JSON_BUSINESS = FOLDER_INPUT + "business_pittsburgh.json"
@@ -16,3 +14,8 @@ Attributes_Cat = ["RestaurantsAttire", "NoiseLevel", "Wifi", "Alcohol", "Smoking
 Attributes_Dict = ["Ambience", "BusinessParking"]
 Attributes = Attributes_Boolean + Attributes_Cat
 
+Keywords_Categories = {
+    'restaurants':['Restaurants', 'Food'],
+    'automotive':['Automotive'],
+    'shopping':['Shopping']
+}
